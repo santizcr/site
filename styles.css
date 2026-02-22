@@ -165,9 +165,27 @@ body{
 }
 .card-image{
   width:100%;
-  height:170px;
   object-fit:cover;
   display:block;
+  background-color:transparent;
+}
+
+/* Listing card images keep fixed height */
+.card > .card-image{
+  height:170px;
+  display:block;
+}
+
+/* Carousel images: don't crop — keep full image visible and centered */
+.carousel-stage .card-image{
+  width:100%;
+  height:100%;
+  flex:0 0 100%;
+  object-fit:contain;
+  align-self:center;
+  display:block;
+  background:var(--bg); /* safe backdrop for transparent images */
+  max-height:80vh;
 }
 .card-content{
   padding:12px;
@@ -251,17 +269,47 @@ body{
 }
 .carousel-stage{
   width:100%;
-  height:260px;
   display:flex;
   transition:transform .36s ease;
   will-change:transform;
+  line-height:0; /* remove baseline gap under images */
+  background:var(--bg);
 }
-.carousel-stage .card-image{height:260px; width:100%; flex:0 0 100%; object-fit:cover}
+/* main slide images: show whole photo without cropping */
+.carousel-stage .card-image{
+  width:100%;
+  height:100%;
+  flex:0 0 100%;
+  object-fit:contain;
+  align-self:center;
+  display:block;
+  background:var(--bg); /* avoid transparent PNG showing a white stripe */
+  max-height:80vh;
+}
 .gallery-thumbs{
   display:flex;
   gap:8px;
   margin-top:8px;
   justify-content:flex-start;
+  /* default: show all thumbs; JS may add .hidden-half to hide overflow */
+  transition: max-height .28s ease, opacity .22s ease;
+}
+.gallery-thumbs.hidden-half{
+  /* hide lower half visually on initial view to avoid long column */
+  max-height: 120px; /* compact height for mobile / narrow view */
+  overflow: hidden;
+  position: relative;
+}
+.gallery-thumbs.hidden-half::after{
+  /* subtle gradient to indicate hidden items */
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 36px;
+  pointer-events: none;
+  background: linear-gradient(180deg, rgba(248,250,252,0) 0%, rgba(248,250,252,1) 100%);
 }
 .gallery-thumbs .thumb{
   width:72px;
@@ -280,18 +328,21 @@ body{
   position:absolute;
   top:50%;
   transform:translateY(-50%);
-  width:40px;
-  height:40px;
-  border-radius:10px;
-  background:rgba(255,255,255,0.9);
+  width:44px;
+  height:44px;
+  border-radius:12px;
+  background:rgba(255,255,255,0.60);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
   display:flex;
   align-items:center;
   justify-content:center;
-  box-shadow:0 6px 18px rgba(16,24,40,0.06);
+  box-shadow:0 10px 26px rgba(16,24,40,0.08);
   cursor:pointer;
+  border:1px solid rgba(255,255,255,0.08);
 }
-.carousel-arrow.left{left:10px}
-.carousel-arrow.right{right:10px}
+.carousel-arrow.left{left:12px}
+.carousel-arrow.right{right:12px}
 
 /* Price: make listing price more visible */
 .price{
@@ -317,13 +368,109 @@ body{
 /* Responsive */
 @media(min-width:720px){
   .cards{grid-template-columns:repeat(3,1fr)}
-  .card-image{height:140px}
+  .card > .card-image{height:140px}
   .header-inner{padding:12px 0}
   .main-nav{display:flex}
-  .gallery{flex-direction:row;align-items:flex-start}
-  .gallery-main{flex:2}
+
+  /* Layout on wider screens: keep main image above and thumbnails below,
+     so thumbnails no longer sit to the right and follow the main content flow. */
+  .gallery{
+    flex-direction:column;
+    align-items:stretch;
+    position:relative;
+  }
+  .gallery-main{
+    width:100%;
+    padding-right:0;
+  }
+
   .card-row{flex:1;display:flex;flex-direction:column;gap:8px}
-  .carousel-stage .card-image{height:220px}
-  .gallery-thumbs{flex-direction:column;margin-top:0}
-  .gallery-thumbs .thumb{width:76px;height:56px}
+
+  .carousel-stage .card-image{ height:auto; } /* keep images natural height on wide screens */
+
+  /* Thumbnails flow below the main stage, arranged in rows and scroll horizontally if needed */
+  .gallery-thumbs{
+    position:relative;
+    right:auto;
+    top:auto;
+    width:100%;
+    display:flex;
+    flex-wrap:wrap;
+    gap:8px;
+    margin-top:12px;
+    align-content:start;
+    max-height: none;
+    overflow:visible;
+    padding:6px 0 0 0;
+    background: transparent;
+    justify-content:flex-start;
+  }
+  .gallery-thumbs .thumb{
+    width:72px;
+    height:52px;
+  }
 }
+
+/* Lightbox styles */
+.lightbox{
+  position:fixed;
+  inset:0;
+  display:none;
+  align-items:center;
+  justify-content:center;
+  z-index:1200;
+  --bg-box: rgba(2,6,23,0.6);
+}
+.lightbox.open{display:flex}
+.lightbox-backdrop{
+  position:absolute;inset:0;background:var(--bg-box);backdrop-filter:blur(6px);
+}
+.lightbox-inner{
+  position:relative;
+  max-width:96%;
+  max-height:96%;
+  width:1300px; /* allow larger display */
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  margin:auto;
+  padding:10px;
+}
+.lbx-image{
+  max-width:1280px;
+  max-height:92vh;
+  border-radius:12px;
+  box-shadow:0 20px 60px rgba(2,6,23,0.55);
+  object-fit:contain;
+  display:block;
+  background:transparent;
+}
+.lbx-nav{
+  position:absolute;
+  top:50%;
+  transform:translateY(-50%);
+  width:52px;
+  height:52px;
+  border-radius:12px;
+  background:rgba(255,255,255,0.60);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border:1px solid rgba(255,255,255,0.10);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  cursor:pointer;
+  box-shadow:0 12px 30px rgba(2,6,23,0.25);
+}
+.lbx-nav.left{left:8px}
+.lbx-nav.right{right:8px}
+.lbx-close{
+  position:absolute;right:8px;top:8px;border:none;background:rgba(255,255,255,0.9);width:40px;height:40px;border-radius:10px;font-size:20px;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;box-shadow:0 8px 20px rgba(2,6,23,0.18);
+}
+.lbx-counter{
+  position:absolute;left:50%;transform:translateX(-50%);bottom:10px;background:rgba(0,0,0,0.5);color:white;padding:6px 10px;border-radius:999px;font-size:13px;
+}
+
+/* Ensure no baseline gaps or white stripes for PNGs */
+img{display:block;line-height:0;max-width:100%;}
