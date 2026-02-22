@@ -287,12 +287,7 @@ body{
   max-height:80vh;
 }
 .gallery-thumbs{
-  display:flex;
-  gap:8px;
-  margin-top:8px;
-  justify-content:flex-start;
-  /* default: show all thumbs; JS may add .hidden-half to hide overflow */
-  transition: max-height .28s ease, opacity .22s ease;
+  display:none !important;
 }
 .gallery-thumbs.hidden-half{
   /* hide lower half visually on initial view to avoid long column */
@@ -390,20 +385,7 @@ body{
 
   /* Thumbnails flow below the main stage, arranged in rows and scroll horizontally if needed */
   .gallery-thumbs{
-    position:relative;
-    right:auto;
-    top:auto;
-    width:100%;
-    display:flex;
-    flex-wrap:wrap;
-    gap:8px;
-    margin-top:12px;
-    align-content:start;
-    max-height: none;
-    overflow:visible;
-    padding:6px 0 0 0;
-    background: transparent;
-    justify-content:flex-start;
+    display:none !important;
   }
   .gallery-thumbs .thumb{
     width:72px;

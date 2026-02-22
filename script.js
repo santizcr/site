@@ -42,21 +42,31 @@ document.addEventListener('click', function(e){
     }
 
     // determine how many thumbs fit under the main image and show only that many initially
+    // on narrow screens (mobile) keep thumbs horizontally scrollable instead of hiding extras
     function fitThumbnails(){
       if(!thumbContainer) return;
-      // get available width of main stage
+      // if narrow viewport, allow horizontal scroll and show all thumbs
+      if(window.innerWidth < 720){
+        thumbContainer.classList.remove('hidden-half');
+        Array.from(thumbContainer.children).forEach(t => t.style.display = '');
+        // ensure horizontal layout (CSS handles nowrap), nothing more to do
+        return;
+      }
+
+      // desktop / wide: compute how many thumbnails fit under the main stage and hide the rest
       const stageBox = stage.getBoundingClientRect();
       const thumbEl = thumbContainer.querySelector('.thumb');
       if(!thumbEl) return;
-      const thumbStyle = getComputedStyle(thumbEl);
       const gap = parseFloat(getComputedStyle(thumbContainer).gap || 8);
       const thumbW = thumbEl.getBoundingClientRect().width + gap;
       const available = Math.max(0, stageBox.width - 1); // small tolerance
       const count = Math.max(1, Math.floor(available / thumbW));
-      // mark extras as hidden via attribute (CSS will clip via hidden-half)
+      // mark extras as hidden via CSS clipping (we still set display:none for performance)
       Array.from(thumbContainer.children).forEach((t, i) => {
         t.style.display = i < count ? '' : 'none';
       });
+      // keep the compact visual hint on wide screens until user interacts
+      thumbContainer.classList.add('hidden-half');
     }
 
     // reveal thumbnails on first meaningful interaction
