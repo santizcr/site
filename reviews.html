@@ -28,6 +28,13 @@
       font-size: inherit !important; /* keep consistent typography */
       color: inherit !important;
     }
+
+    /* Dark theme: make unselected "Квартира в центре" button use cozy color #000b4 for better contrast */
+    :root[data-theme="dark"] .obj-btn[data-value="centr"]:not(.btn-primary){
+      background: #000b4;
+      color: #fff;
+      border-color: transparent;
+    }
   </style>
 </head>
 <body>
@@ -61,7 +68,7 @@
       </div>
       <h2 id="revTitle" style="margin:0 0 8px;">Отзывы гостей</h2>
       <div class="desktop-btn" style="width:100%;margin-bottom:12px;">
-        <a class="nav-link" href="index.html" style="width:100%;display:block;text-align:center;padding:12px 0;border-radius:10px;">На главную</a>
+        <a class="btn btn-primary" href="index.html" style="width:100%;display:block;text-align:center;padding:12px 0;border-radius:10px;">На главную</a>
       </div>
 
       <!-- Review submission form for visitors -->
@@ -285,5 +292,7 @@
       });
     })();
   </script>
+
+  <script src="script.js"></script>
 </body>
 </html>

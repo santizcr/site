@@ -18,47 +18,70 @@
   --theme-toggle-border: transparent;
 }
 
-/* Dark theme overrides when document root has data-theme="dark" */
+/* Dark theme overrides when document root has data-theme="dark"
+   NOTE: dark theme mirrors the same component variables/layout as the light theme,
+   but substitutes colors for a consistent dark appearance across all pages. */
 :root[data-theme="dark"]{
-  --bg:#071226; /* slightly warmer/darker for contrast */
-  --panel:#071827; /* solid subtle panel color to avoid conflicting gradients */
-  --card:#081826;
-  --muted:#9fb6d6;
-  --text:#e6eef9;
-  --accent:#2b8bff;
-  --accent-2:#66b8ff; /* lighter bluish accent to improve readability */
-  --btn-detail:#2b52ff; /* use same detail button color as light theme */
-  --shadow: 0 12px 30px rgba(0,0,0,0.6);
+  /* Core surface & text */
+  --bg: #071226;          /* page background (dark) */
+  --panel: #0b1722;       /* panels/cards surface */
+  --card: #0e2130;        /* card background */
+  --text: #e6eef9;        /* main text (light) */
+  --muted: #9fb6d6;       /* muted/secondary text */
 
-  /* Theme-toggle color for dark theme: bluish/light icon */
+  /* Accent / action colors (kept proportionally similar to light theme) */
+  --accent: #2b8bff;
+  --accent-2: #66b8ff;
+  --btn-detail: #2b52ff;
+
+  /* Shadows and radii (use stronger dark shadows) */
+  --shadow: 0 12px 30px rgba(0,0,0,0.6);
+  --radius: 12px;
+  --gap: 16px;
+  --maxw: 980px;
+
+  /* Theme-toggle icon colors */
   --theme-toggle: #66b8ff;
   --theme-toggle-bg: transparent;
   --theme-toggle-border: transparent;
 
-  /* Dark-theme overrides for specific UI elements requested:
-     - map-box background (e.g. "г. Таганрог")
-     - telephone links / "Позвонить" buttons
-     Using deep navy tone for map-box and a slightly different deep blue for tel buttons as requested. */
-  --mapbox-dark-bg: #000621;
+  /* Specific darker surfaces for map / tel buttons */
+  --mapbox-dark-bg: #041026;
   --tel-btn-dark-bg: #000b4;
 
-  /* Make the mobile "Отзывы" nav button use the same detail color as in the light theme
-     Keep highlighted appearance on small screens, but on desktop (PC) in dark theme remove the background. */
+  /* Keep same responsive tweaks as light theme but using dark variables where relevant */
   @media (max-width:520px){
     .main-nav .nav-link[href$="reviews.html"]{
-      background: var(--btn-detail, #2b52ff);
+      background: var(--btn-detail);
       color: #ffffff;
-      border-color: rgba(0,0,0,0.04);
+      border-color: rgba(255,255,255,0.04);
     }
   }
   @media (min-width:720px){
-    /* Desktop: in dark theme we want the reviews nav-link to blend with other nav links (no filled background) */
     .main-nav .nav-link[href$="reviews.html"]{
       background: transparent;
       color: var(--text);
       border-color: transparent;
     }
   }
+
+  /* Ensure transparent/backdrop controls in dark theme remain subtle */
+  #themeToggleBtn{
+    background: var(--theme-toggle-bg) !important;
+    border: 1px solid var(--theme-toggle-border) !important;
+    color: var(--theme-toggle);
+  }
+
+  /* Map box and tel-button overrides use the variables above */
+  .map-box{ background: var(--mapbox-dark-bg); color: var(--text); }
+  a[href^="tel"].btn, a[href^="tel"] .btn { background: var(--tel-btn-dark-bg); color: #ffffff; border-color: rgba(255,255,255,0.06); }
+
+  /* Make sure components that relied on light gradients/panels get dark-friendly backgrounds */
+  .meta-panel{ background: linear-gradient(180deg, rgba(10,24,40,0.6), rgba(8,18,30,0.5)); border:1px solid rgba(255,255,255,0.03); }
+  .btn-outline{ background: var(--panel); color: var(--accent-2); border: 1px solid rgba(255,255,255,0.04); }
+  .btn-primary{ background: var(--accent); color: #ffffff; border: 1px solid rgba(255,255,255,0.04); }
+
+  /* Keep other component behavior identical to light theme but with above variables applied */
 }
 
 *{box-sizing:border-box}
@@ -802,6 +825,13 @@ a[href*="api.whatsapp.com"].btn-primary{
 img{display:block;line-height:0;max-width:100%;}
 
 /* Mobile-specific toggle of reviews button: show the top button on phones and hide desktop placement */
+
+/* Ensure in dark theme the unselected "Квартира в центре" object button uses the requested cozy navy */
+:root[data-theme="dark"] .obj-btn[data-value="centr"]:not(.btn-primary){
+  background: #000b4;
+  color: #ffffff;
+  border-color: transparent;
+}
 .mobile-top-btn{ display:none; }
 .desktop-btn{ display:block; }
 
