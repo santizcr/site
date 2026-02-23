@@ -49,7 +49,6 @@
         <nav class="main-nav" aria-label="Главное меню">
           <a class="nav-link" href="index.html">Главная</a>
           <a class="nav-link" href="contacts.html">Контакты</a>
-          <a class="nav-link" href="reviews.html">Отзывы</a>
         </nav>
       </div>
     </div>
@@ -57,11 +56,12 @@
 
   <main class="container">
     <div class="reviews-wrap" role="main" aria-labelledby="revTitle">
+      <div class="mobile-top-btn" aria-hidden="false" style="margin-top:12px;">
+        <a class="btn btn-primary" href="index.html" style="width:100%;display:block;text-align:center;padding:12px 0;border-radius:10px;">На главную</a>
+      </div>
       <h2 id="revTitle" style="margin:0 0 8px;">Отзывы гостей</h2>
-      
-
-      <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px;">
-        <a class="btn btn-primary" href="index.html">На главную</a>
+      <div class="desktop-btn" style="width:100%;margin-bottom:12px;">
+        <a class="nav-link" href="index.html" style="width:100%;display:block;text-align:center;padding:12px 0;border-radius:10px;">На главную</a>
       </div>
 
       <!-- Review submission form for visitors -->
@@ -131,7 +131,7 @@
       const revObjectGroup = document.getElementById('revObjectGroup');
       const starWrap = document.getElementById('starWrap');
       const revMsg = document.getElementById('revMsg');
-      let currentRating = 1; // minimum 1
+      let currentRating = 5; // default 5
 
       // object button selection helpers (visual toggle + hidden input sync)
       function setObject(val){
@@ -268,14 +268,14 @@
         arr.unshift(entry);
         if(!saveReviews(arr)){ revMsg.textContent = 'Ошибка сохранения'; revMsg.style.color='crimson'; return; }
         revMsg.textContent = 'Отзыв добавлен'; revMsg.style.color='green';
-        revAuthor.value=''; revText.value=''; revObject.selectedIndex=0; currentRating = 1; updateStarButtons();
+        revAuthor.value=''; revText.value=''; revObject.selectedIndex=0; currentRating = 5; updateStarButtons();
         render();
         try{ window.dispatchEvent(new Event('storage')); }catch(e){}
         setTimeout(()=>{ revMsg.textContent=''; }, 2500);
       });
 
       document.getElementById('resetReview').addEventListener('click', function(){
-        revAuthor.value=''; revText.value=''; revObject.selectedIndex=0; currentRating=1; updateStarButtons(); revMsg.textContent=''; 
+        revAuthor.value=''; revText.value=''; revObject.selectedIndex=0; currentRating=5; updateStarButtons(); revMsg.textContent=''; 
       });
 
       // render on load and when storage changes (from admin)
