@@ -1,0 +1,124 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Вход в админ — HAREST</title>
+  <link rel="stylesheet" href="styles.css">
+  <style>
+    .login-wrap{max-width:420px;margin:40px auto;padding:18px;background:var(--card);border-radius:12px;box-shadow:var(--shadow)}
+    .login-field{display:flex;flex-direction:column;gap:8px;margin-top:12px}
+    .login-field input{padding:10px;border-radius:8px;border:1px solid rgba(0,0,0,0.06);font-size:16px}
+    .hint{font-size:13px;color:var(--muted);margin-top:8px}
+    .msg{font-size:14px;margin-top:8px}
+  </style>
+</head>
+<body>
+  <header class="site-header">
+    <div class="header-inner">
+      <div class="owner">
+        <div class="brand">
+          <span class="brand-logo" aria-hidden="true">
+            <img src="./logo_no.png" alt="HAREST" class="brand-logo-img" />
+          </span>
+          <div>
+            <div class="owner-name">HAREST</div>
+            <div class="owner-sub">Вход в админ панель</div>
+          </div>
+        </div>
+      </div>
+      <div class="header-actions">
+        <nav class="main-nav" aria-label="menu">
+          <a class="nav-link" href="index.html">Главная</a>
+          <a class="nav-link" href="contacts.html">Контакты</a>
+        </nav>
+      </div>
+    </div>
+  </header>
+
+  <main class="container">
+    <div class="login-wrap" role="main" aria-labelledby="loginTitle">
+      <h2 id="loginTitle" style="margin:0">Требуется пароль</h2>
+      <p class="hint">Введите пароль администратора, чтобы открыть панель управления.</p>
+
+      <div class="login-field">
+        <label class="small" for="pwd">Пароль</label>
+        <div style="position:relative;display:flex;align-items:center;">
+          <input id="pwd" type="password" autocomplete="current-password" placeholder="Введите пароль" style="padding-right:44px;width:100%;">
+          <button id="togglePwd" type="button" aria-pressed="false" title="Показать/скрыть" style="position:absolute;right:6px;width:36px;height:36px;border-radius:8px;border:none;background:transparent;display:inline-flex;align-items:center;justify-content:center;cursor:pointer;font-size:18px">👁️</button>
+        </div>
+        <div style="display:flex;gap:8px;">
+          <button id="submitBtn" class="btn btn-primary">Войти</button>
+          <a class="btn btn-outline" href="index.html">Отмена</a>
+        </div>
+        <div class="msg" id="msg" aria-live="polite"></div>
+      </div>
+
+      <div style="margin-top:12px;">
+        <div class="hint" style="margin:0">Пароль установлен один для всех администраторов.</div>
+      </div>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="footer-inner">
+      <div class="contact">
+        <h3 class="contact-title">Админ</h3>
+      </div>
+    </div>
+    <div class="footer-note">© HAREST — аренда жилья без посредников</div>
+  </footer>
+
+  <script>
+    (function(){
+      const PASSWORD = 'Savvuchka2010';
+      const input = document.getElementById('pwd');
+      const btn = document.getElementById('submitBtn');
+      const msg = document.getElementById('msg');
+      const toggle = document.getElementById('togglePwd');
+
+      function show(text, ok){
+        msg.textContent = text;
+        msg.style.color = ok ? 'green' : 'crimson';
+      }
+
+      function successRedirect(){
+        try {
+          localStorage.setItem('harest_admin_authed','1');
+        } catch(e){}
+        window.location.href = 'admin.html';
+      }
+
+      btn.addEventListener('click', function(){
+        const val = input.value || '';
+        if(val === PASSWORD){
+          successRedirect();
+        } else {
+          show('Неверный пароль', false);
+        }
+      });
+
+      input.addEventListener('keydown', function(e){
+        if(e.key === 'Enter') btn.click();
+      });
+
+      // Toggle show/hide password using an inline icon button
+      toggle.addEventListener('click', function(){
+        const isHidden = input.type === 'password';
+        input.type = isHidden ? 'text' : 'password';
+        // icon: eye (visible) / eye-with-slash (hidden) style via emoji fallback
+        toggle.innerHTML = isHidden ? '🙈' : '👁️';
+        toggle.setAttribute('aria-pressed', String(isHidden));
+      });
+
+      // Optional: if already authed, go straight to admin
+      try {
+        if(localStorage.getItem('harest_admin_authed') === '1') {
+          show('Вы уже вошли — перенаправление...', true);
+          setTimeout(successRedirect, 700);
+        }
+      } catch(e){}
+    })();
+  </script>
+</body>
+</html>

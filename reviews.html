@@ -1,0 +1,289 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Отзывы — HAREST</title>
+  <link rel="stylesheet" href="styles.css">
+  <style>
+    .reviews-wrap{max-width:900px;margin:18px auto;padding:16px;background:var(--card);border-radius:12px;box-shadow:var(--shadow)}
+    .review-item{padding:10px;border-radius:8px;background:var(--panel);display:flex;flex-direction:column;gap:8px}
+    .rev-meta{display:flex;justify-content:space-between;align-items:center;gap:8px}
+    .rev-text{white-space:pre-wrap;color:var(--text)}
+    .empty{color:var(--muted);padding:12px;border-radius:8px;background:var(--panel);text-align:center}
+    .rev-controls{display:flex;gap:8px;flex-wrap:wrap}
+
+    /* Prevent any injected/inline styles from changing background sizing or background visuals
+       inside review content (defensive CSS to neutralize background-size/background images etc.) */
+    .rev-text,
+    .rev-text * {
+      background-size: initial !important;
+      background-repeat: initial !important;
+      background-image: none !important;
+      background-color: transparent !important;
+      background: transparent !important;
+      -webkit-background-size: initial !important;
+      -moz-background-size: initial !important;
+      -o-background-size: initial !important;
+      font-size: inherit !important; /* keep consistent typography */
+      color: inherit !important;
+    }
+  </style>
+</head>
+<body>
+  <header class="site-header">
+    <div class="header-inner">
+      <div class="owner">
+        <div class="brand">
+          <span class="brand-logo" aria-hidden="true">
+            <img src="./logo_no.png" alt="HAREST" class="brand-logo-img" />
+          </span>
+          <div>
+            <div class="owner-name">HAREST</div>
+            <div class="owner-sub">Отзывы</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="header-actions">
+        <nav class="main-nav" aria-label="Главное меню">
+          <a class="nav-link" href="index.html">Главная</a>
+          <a class="nav-link" href="contacts.html">Контакты</a>
+          <a class="nav-link" href="reviews.html">Отзывы</a>
+        </nav>
+      </div>
+    </div>
+  </header>
+
+  <main class="container">
+    <div class="reviews-wrap" role="main" aria-labelledby="revTitle">
+      <h2 id="revTitle" style="margin:0 0 8px;">Отзывы гостей</h2>
+      
+
+      <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px;">
+        <a class="btn btn-primary" href="index.html">На главную</a>
+      </div>
+
+      <!-- Review submission form for visitors -->
+      <div style="margin-bottom:12px;">
+        <form id="reviewForm" style="display:flex;flex-direction:column;gap:8px;padding:12px;border-radius:8px;background:var(--panel);">
+          <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;">
+            <label class="small" style="min-width:120px;display:flex;align-items:center;gap:8px;">Объект:</label>
+            <div id="revObjectGroup" style="display:flex;gap:8px;flex-wrap:wrap;">
+              <button type="button" class="obj-btn btn btn-outline" data-value="dom" aria-pressed="false">Уютный дом</button>
+              <button type="button" class="obj-btn btn btn-outline" data-value="centr" aria-pressed="false">Квартира в центре</button>
+              <button type="button" class="obj-btn btn btn-outline" data-value="park" aria-pressed="false">Квартира у парка</button>
+            </div>
+            <input type="hidden" id="revObject" value="dom">
+          </div>
+
+          <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;">
+            <label class="small" for="revAuthor" style="min-width:120px;">Ваше имя</label>
+            <input id="revAuthor" type="text" placeholder="Имя (необязательно)" style="flex:1;padding:8px;border-radius:8px;border:1px solid rgba(0,0,0,0.06);">
+          </div>
+
+          <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;">
+            <label class="small" style="min-width:120px;">Оценка</label>
+            <div id="starWrap" style="display:flex;gap:6px;align-items:center;">
+              <!-- star buttons (1..5) -->
+              <button type="button" class="btn btn-outline star" data-value="1" aria-label="1 звезда">1★</button>
+              <button type="button" class="btn btn-outline star" data-value="2" aria-label="2 звезды">2★</button>
+              <button type="button" class="btn btn-outline star" data-value="3" aria-label="3 звезды">3★</button>
+              <button type="button" class="btn btn-outline star" data-value="4" aria-label="4 звезды">4★</button>
+              <button type="button" class="btn btn-outline star" data-value="5" aria-label="5 звёзд">5★</button>
+            </div>
+          </div>
+
+          <textarea id="revText" placeholder="Текст отзыва" rows="3" style="padding:8px;border-radius:8px;border:1px solid rgba(0,0,0,0.06);"></textarea>
+
+          <div style="display:flex;gap:8px;">
+            <button class="btn btn-primary" id="submitReview" type="submit">Отправить отзыв</button>
+            <button class="btn btn-outline" id="resetReview" type="button">Очистить</button>
+            <div id="revMsg" class="small" style="margin-left:auto;align-self:center;color:var(--muted)"></div>
+          </div>
+        </form>
+      </div>
+
+      <div id="reviewsContainer"></div>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="footer-inner">
+      <div class="contact">
+        <div class="contact-title">Свяжитесь со мной</div>
+        <div style="font-size:14px;color:var(--muted)">Email: <a href="mailto:harmonyisrest@gmail.com">harmonyisrest@gmail.com</a></div>
+      </div>
+      <div class="map">
+        <div class="map-box"><div><strong>Ростовская обл.</strong></div><div>г. Таганрог</div></div>
+      </div>
+    </div>
+    <div class="footer-note">© HAREST — аренда жилья без посредников</div>
+  </footer>
+
+  <script>
+    (function(){
+      const container = document.getElementById('reviewsContainer');
+      const form = document.getElementById('reviewForm');
+      const revAuthor = document.getElementById('revAuthor');
+      const revText = document.getElementById('revText');
+      const revObject = document.getElementById('revObject');
+      const revObjectGroup = document.getElementById('revObjectGroup');
+      const starWrap = document.getElementById('starWrap');
+      const revMsg = document.getElementById('revMsg');
+      let currentRating = 1; // minimum 1
+
+      // object button selection helpers (visual toggle + hidden input sync)
+      function setObject(val){
+        if(revObject) revObject.value = val;
+        if(!revObjectGroup) return;
+        Array.from(revObjectGroup.querySelectorAll('.obj-btn')).forEach(b=>{
+          if(b.dataset.value === val){
+            b.classList.remove('btn-outline');
+            b.classList.add('btn-primary');
+            b.setAttribute('aria-pressed','true');
+          } else {
+            b.classList.remove('btn-primary');
+            b.classList.add('btn-outline');
+            b.setAttribute('aria-pressed','false');
+          }
+        });
+      }
+      // initialize object selection (default 'dom')
+      try{
+        if(revObject && !revObject.value) revObject.value = 'dom';
+        setObject((revObject && revObject.value) || 'dom');
+      }catch(e){}
+      if(revObjectGroup){
+        revObjectGroup.addEventListener('click', function(e){
+          const btn = e.target.closest('.obj-btn');
+          if(!btn) return;
+          setObject(btn.dataset.value);
+        });
+      }
+
+      function reviewsKey(){ return 'harest_reviews'; }
+      function loadReviews(){
+        try{
+          const raw = localStorage.getItem(reviewsKey());
+          if(!raw) return [];
+          const parsed = JSON.parse(raw);
+          if(Array.isArray(parsed)) return parsed;
+        }catch(e){}
+        return [];
+      }
+      function saveReviews(arr){
+        try{ localStorage.setItem(reviewsKey(), JSON.stringify(arr)); return true; }catch(e){ return false; }
+      }
+
+      function escapeHtml(s){ return String(s||'').replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m])); }
+
+      function starsHtml(n){
+        let s = '';
+        for(let i=1;i<=5;i++){
+          s += i<=n ? '★' : '☆';
+        }
+        return '<span style="color:#f59e0b;font-weight:700;">' + s + '</span>';
+      }
+
+      function objectLabel(key){
+        if(key === 'dom') return 'Уютный дом';
+        if(key === 'centr') return 'Квартира в центре';
+        if(key === 'park') return 'Квартира у парка';
+        return key || '';
+      }
+
+      function render(){
+        const list = loadReviews();
+        container.innerHTML = '';
+        if(!list.length){
+          const empty = document.createElement('div');
+          empty.className = 'empty';
+          empty.textContent = 'Пока нет отзывов';
+          container.appendChild(empty);
+          return;
+        }
+        const grid = document.createElement('div');
+        grid.style.display = 'grid';
+        grid.style.gap = '10px';
+        list.forEach(r => {
+          const it = document.createElement('div');
+          it.className = 'review-item';
+          const meta = document.createElement('div');
+          meta.className = 'rev-meta';
+          const left = document.createElement('div');
+          left.innerHTML = '<strong>' + escapeHtml(r.author || 'Аноним') + '</strong><div class="small" style="color:var(--muted)">' + escapeHtml(objectLabel(r.object)) + '</div>';
+          const right = document.createElement('div');
+          right.style.textAlign = 'right';
+          right.innerHTML = (r.date || '') + '<div class="small" style="color:var(--muted);margin-top:6px;">' + starsHtml(r.rating || 1) + '</div>';
+          meta.appendChild(left);
+          meta.appendChild(right);
+
+          const txt = document.createElement('div');
+          txt.className = 'rev-text';
+          txt.textContent = r.text || '';
+
+          it.appendChild(meta);
+          it.appendChild(txt);
+          grid.appendChild(it);
+        });
+        container.appendChild(grid);
+      }
+
+      // star button interactions
+      function updateStarButtons(){
+        Array.from(starWrap.querySelectorAll('.star')).forEach(btn=>{
+          const v = parseInt(btn.dataset.value || '1',10);
+          if(v <= currentRating){
+            btn.classList.remove('btn-outline');
+            btn.classList.add('btn-primary');
+          } else {
+            btn.classList.remove('btn-primary');
+            btn.classList.add('btn-outline');
+          }
+        });
+      }
+      starWrap.addEventListener('click', function(e){
+        const b = e.target.closest('.star');
+        if(!b) return;
+        const val = parseInt(b.dataset.value || '1',10);
+        if(!isNaN(val) && val >= 1 && val <=5){
+          currentRating = val;
+          updateStarButtons();
+        }
+      });
+      // initialize
+      updateStarButtons();
+
+      // form submit
+      form.addEventListener('submit', function(e){
+        e.preventDefault();
+        const author = (revAuthor.value || '').trim();
+        const text = (revText.value || '').trim();
+        const obj = revObject.value || '';
+        const rating = currentRating || 1;
+        if(!text){ revMsg.textContent = 'Введите текст отзыва'; revMsg.style.color='crimson'; return; }
+        const arr = loadReviews();
+        const entry = { author: author || 'Аноним', date: (new Date()).toISOString().slice(0,10), text, rating, object: obj };
+        arr.unshift(entry);
+        if(!saveReviews(arr)){ revMsg.textContent = 'Ошибка сохранения'; revMsg.style.color='crimson'; return; }
+        revMsg.textContent = 'Отзыв добавлен'; revMsg.style.color='green';
+        revAuthor.value=''; revText.value=''; revObject.selectedIndex=0; currentRating = 1; updateStarButtons();
+        render();
+        try{ window.dispatchEvent(new Event('storage')); }catch(e){}
+        setTimeout(()=>{ revMsg.textContent=''; }, 2500);
+      });
+
+      document.getElementById('resetReview').addEventListener('click', function(){
+        revAuthor.value=''; revText.value=''; revObject.selectedIndex=0; currentRating=1; updateStarButtons(); revMsg.textContent=''; 
+      });
+
+      // render on load and when storage changes (from admin)
+      document.addEventListener('DOMContentLoaded', render);
+      window.addEventListener('storage', function(e){
+        if(!e.key || e.key === reviewsKey()) render();
+      });
+    })();
+  </script>
+</body>
+</html>

@@ -1,0 +1,197 @@
+/* admin.css — admin panel styled to match the main site (uses site variables & shared button styles) */
+.admin {
+  max-width:980px;
+  margin:20px auto;
+  padding:18px;
+  background:var(--card);
+  border-radius:12px;
+  box-shadow:var(--shadow);
+  display:flex;
+  flex-direction:column;
+  gap:16px;
+  font-family:inherit;
+  color:var(--text);
+}
+
+/* top row: selector + actions */
+.admin .top {
+  display:flex;
+  gap:12px;
+  align-items:center;
+  flex-wrap:wrap;
+}
+.admin label.small{font-size:13px;color:var(--muted);min-width:150px}
+
+/* fields and controls: use site input styles */
+.field{
+  display:flex;
+  gap:10px;
+  align-items:center;
+  margin:6px 0;
+  width:100%;
+}
+.field input[type="url"], .field input[type="text"], .field input[type="file"],
+.field textarea {
+  flex:1;
+  padding:10px;
+  border-radius:10px;
+  border:1px solid rgba(16,24,40,0.06);
+  background:var(--panel);
+  font-size:14px;
+  color:var(--text);
+}
+
+/* layout columns */
+.admin .cols {
+  display:grid;
+  grid-template-columns: 1fr 340px;
+  gap:14px;
+}
+@media(max-width:900px){
+  .admin .cols{ grid-template-columns: 1fr; }
+}
+
+/* gallery list area */
+.list{
+  display:block;
+  margin-top:8px;
+}
+.list-grid{
+  display:grid;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  gap:12px;
+  margin-top:8px;
+}
+.item{
+  display:flex;
+  flex-direction:column;
+  gap:8px;
+  padding:10px;
+  border-radius:12px;
+  background:var(--panel);
+  align-items:stretch;
+  min-height:120px;
+  position:relative;
+  transition:transform .12s ease, box-shadow .12s ease;
+}
+.item:hover{ transform:translateY(-4px); box-shadow:0 12px 30px rgba(2,6,23,0.06); }
+.item img{
+  width:100%;
+  height:96px;
+  object-fit:cover;
+  border-radius:8px;
+  border:1px solid rgba(0,0,0,0.04);
+  background:transparent;
+}
+.item .alt{
+  font-size:13px;
+  color:var(--muted);
+  width:100%;
+  padding:6px 8px;
+  border-radius:8px;
+  border:1px solid transparent;
+  background:transparent;
+}
+.item .alt:focus{ outline:none; border-color:rgba(43,82,255,0.08); background:rgba(43,82,255,0.02); }
+
+.item .del {
+  position:absolute;
+  top:8px;
+  right:8px;
+  width:36px;
+  height:36px;
+  border-radius:10px;
+  background:white;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  border:1px solid rgba(0,0,0,0.04);
+  cursor:pointer;
+  font-weight:700;
+  color:var(--text);
+}
+
+/* meta panel on right: lighter surface consistent with site */
+.meta-panel{
+  padding:12px;
+  border-radius:12px;
+  background:linear-gradient(180deg, rgba(243,246,255,0.6), rgba(255,255,255,0.4));
+  border:1px solid rgba(37,99,235,0.06);
+  display:flex;
+  flex-direction:column;
+  gap:8px;
+}
+.meta-panel input, .meta-panel textarea{
+  width:100%;
+  padding:10px;
+  border-radius:10px;
+  border:1px solid rgba(16,24,40,0.06);
+  background:transparent;
+  font-size:14px;
+  color:var(--text);
+}
+.meta-panel textarea{ resize:vertical; min-height:80px; }
+
+/* action buttons: reuse global .btn styles for consistency */
+.controls{
+  display:flex;
+  gap:10px;
+  flex-wrap:wrap;
+  margin-top:12px;
+}
+.btn{ min-height:44px; padding:10px 14px; border-radius:10px; font-weight:700; cursor:pointer; font-family:inherit; }
+.btn.btn-primary{ background:var(--accent); color:#fff; border:none; box-shadow:0 8px 26px rgba(43,82,255,0.12); }
+.btn.btn-outline{ background:#fff; color:var(--accent-2); border:1px solid rgba(16,24,40,0.06); }
+
+/* make small action links look unified */
+.admin a.btn{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  text-decoration:none;
+  color:inherit;
+}
+
+/* message area */
+#msg{
+  margin-top:8px;
+  padding:8px 10px;
+  border-radius:10px;
+  font-weight:600;
+  color:var(--muted);
+  background:transparent;
+  min-height:20px;
+}
+#msg.ok{ color:green; background:rgba(16,185,129,0.06); border:1px solid rgba(16,185,129,0.08); }
+#msg.err{ color:crimson; background:rgba(244,63,94,0.04); border:1px solid rgba(244,63,94,0.06); }
+
+/* Reviews area — match site card appearance */
+.reviews-list{
+  display:flex;
+  flex-direction:column;
+  gap:10px;
+  margin-top:6px;
+}
+.reviews-list .item{
+  padding:12px;
+  border-radius:10px;
+  background:var(--panel);
+  box-shadow: none;
+}
+.reviews-list .item .small{ color:var(--muted); font-size:13px; }
+.reviews-list .item .rev-text{ white-space:pre-wrap; color:var(--text); margin-top:6px; }
+
+/* small helper */
+.small{ font-size:13px; color:var(--muted); }
+
+/* compact mobile tweaks */
+@media(max-width:520px){
+  .item img{ height:84px; }
+  .meta-panel{ order:2; }
+  .admin .cols{ grid-template-columns: 1fr; }
+}
+
+/* ensure form controls are touch-friendly */
+input, textarea, select, button{ touch-action:manipulation; -webkit-tap-highlight-color: rgba(0,0,0,0.06); }
+
+/* tombstone: removed function foo() {} */

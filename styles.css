@@ -1,0 +1,583 @@
+:root{
+  --bg:#f8fafc;
+  --panel:#f1f5f9;
+  --card:#ffffff;
+  --muted:#64748b;
+  --text:#1e293b;
+  --accent:#2b52ff;    /* updated accent to #2b52ff */
+  --accent-2:#183fd2;  /* slightly bluer darker accent */
+  --btn-detail:#2b52ff; /* "Подробнее" button color updated to match accent */
+  --shadow: 0 8px 24px rgba(16,24,40,0.06);
+  --radius:12px;
+  --gap:16px;
+  --maxw:980px;
+
+  /* Theme-toggle color for light theme: subtle dark-blue icon (non-highlighted) */
+  --theme-toggle: #000000;
+  --theme-toggle-bg: transparent;
+  --theme-toggle-border: transparent;
+}
+
+/* Dark theme overrides when document root has data-theme="dark" */
+:root[data-theme="dark"]{
+  --bg:#071226; /* slightly warmer/darker for contrast */
+  --panel:#071827; /* solid subtle panel color to avoid conflicting gradients */
+  --card:#081826;
+  --muted:#9fb6d6;
+  --text:#e6eef9;
+  --accent:#2b8bff;
+  --accent-2:#66b8ff; /* lighter bluish accent to improve readability */
+  --btn-detail:#66b8ff;
+  --shadow: 0 12px 30px rgba(0,0,0,0.6);
+
+  /* Theme-toggle color for dark theme: bluish/light icon */
+  --theme-toggle: #66b8ff;
+  --theme-toggle-bg: transparent;
+  --theme-toggle-border: transparent;
+
+  /* Dark-theme overrides for specific UI elements requested:
+     - map-box background (e.g. "г. Таганрог")
+     - telephone links / "Позвонить" buttons
+     Using deep navy tone for map-box and a slightly different deep blue for tel buttons as requested. */
+  --mapbox-dark-bg: #000621;
+  --tel-btn-dark-bg: #000b4;
+}
+
+*{box-sizing:border-box}
+html,body{height:100%}
+body{
+  margin:0;
+  font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+  background:var(--bg);
+  color:var(--text);
+  -webkit-font-smoothing:antialiased;
+  -moz-osx-font-smoothing:grayscale;
+  display:flex;
+  flex-direction:column;
+  align-items:stretch;
+  min-height:100vh;
+}
+
+/* Header */
+.site-header{
+  background:transparent;
+  padding:12px;
+  border-bottom:1px solid rgba(16,24,40,0.04);
+}
+.header-inner{
+  max-width:var(--maxw);
+  margin:0 auto;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+  padding:8px;
+}
+.brand{
+  display:flex;
+  align-items:center;
+  gap:10px;
+}
+.owner-name{
+  font-weight:700;
+  font-size:18px;
+  color:var(--text);
+}
+.brand-logo{
+  width:40px;
+  height:40px;
+  flex:0 0 40px;
+  border-radius:8px;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  background: #ffffff;
+  border: 1px solid rgba(0,0,0,0.04);
+  box-shadow:0 6px 18px rgba(16,24,40,0.06);
+}
+.brand-logo svg{width:22px;height:22px;display:block;}
+.brand-logo-img{
+  width:40px;
+  height:40px;
+  display:inline-block;
+  border-radius:8px;
+  object-fit:cover;
+  box-shadow:0 6px 18px rgba(37,99,235,0.08);
+}
+.owner-sub{
+  font-size:13px;
+  color:var(--muted);
+  margin-top:4px;
+}
+
+/* Nav */
+.main-nav{display:none;gap:12px}
+.nav-link{
+  color:var(--text);
+  text-decoration:none;
+  padding:6px 8px;
+  border-radius:8px;
+  font-weight:600;
+}
+.nav-link:hover{background:rgba(37,99,235,0.06); color:var(--accent-2)}
+
+/* Header actions */
+.header-actions{
+  display:flex;
+  gap:10px;
+}
+
+/* Buttons */
+.btn{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  min-height:44px;
+  padding:10px 14px;
+  border-radius:10px;
+  font-weight:600;
+  text-decoration:none;
+  font-size:14px;
+  cursor:pointer;
+}
+
+/* Theme toggle button: understated, no extra highlight; keep icon color black in light theme */
+#themeToggleBtn{
+  background: var(--theme-toggle-bg, transparent) !important;
+  border: 1px solid var(--theme-toggle-border, transparent) !important;
+  color: #000 !important; /* black for the sun icon in light theme */
+  box-shadow: none !important;
+  outline: none;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  /* Make emoji align consistently across platforms:
+     - use explicit emoji font stack
+     - normalize line-height and prevent extra internal padding
+     - small vertical tweak to compensate baseline differences */
+  font-family: "Segoe UI Emoji", "Noto Color Emoji", "Apple Color Emoji", "Twemoji Mozilla", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+  line-height:1 !important;
+  padding:0; /* keep exact centering */
+  width:44px;
+  height:44px;
+  border-radius:10px;
+  font-size:20px; /* slightly larger to match emoji glyph */
+  transform: translateY(1px); /* tiny vertical nudge to visually center glyphs */
+}
+
+/* In dark theme make the toggle icon white so the moon appears white */
+:root[data-theme="dark"] #themeToggleBtn{
+  color: #fff !important;
+  /* keep same alignment tweak in dark theme */
+  line-height:1 !important;
+  transform: translateY(1px);
+}
+
+/* ensure the toggle doesn't draw attention with hover shadows — keep subtle hover only */
+#themeToggleBtn:hover{
+  background: rgba(0,0,0,0.04);
+}
+.btn-primary{
+  background:var(--accent);
+  color:white;
+  border:1px solid rgba(0,0,0,0.04);
+  box-shadow:none;
+}
+
+/* Make all "Подробнее" buttons in listing cards use a single detail color */
+.card-actions .btn-primary{
+  background: var(--btn-detail);
+  color: #ffffff;
+  border: 1px solid rgba(0,0,0,0.04);
+  box-shadow: none;
+}
+
+/* Telegram-specific override: anchors linking to t.me will use the requested blue */
+a[href*="t.me"].btn-primary,
+.btn-telegram{
+  background: #1E90FF;
+  color: white;
+  border: 1px solid rgba(0,0,0,0.04);
+}
+
+/* WhatsApp buttons: force white text for contrast; in dark theme use custom blue background */
+a[href*="wa.me"].btn-primary,
+a[href*="api.whatsapp.com"].btn-primary{
+  color: #ffffff;
+}
+
+/* Dark theme: make WhatsApp button use #2b52ff background for better contrast */
+:root[data-theme="dark"] a[href*="wa.me"].btn-primary,
+:root[data-theme="dark"] a[href*="api.whatsapp.com"].btn-primary{
+  background: #2b52ff;
+  color: #ffffff;
+  border-color: rgba(255,255,255,0.06);
+  box-shadow: none;
+}
+.btn-outline{
+  background:white;
+  color:var(--accent-2);
+  border:1px solid rgba(0,0,0,0.08);
+}
+
+/* Main container */
+.container{
+  max-width:var(--maxw);
+  margin:18px auto;
+  padding:0 16px 22px;
+  width:100%;
+  flex:1 0 auto;
+}
+
+/* About */
+.about{
+  background:var(--panel);
+  border-radius:var(--radius);
+  padding:14px;
+  box-shadow:var(--shadow);
+  margin-bottom:18px;
+}
+.about h2{
+  margin:0 0 8px 0;
+  font-size:16px;
+  color:var(--text);
+}
+.about p{
+  margin:0;
+  color:var(--text);
+  opacity:0.9;
+  line-height:1.45;
+}
+
+/* Listings */
+.section-title{
+  margin:8px 4px;
+  font-size:16px;
+  color:var(--text);
+}
+.cards{
+  display:grid;
+  grid-template-columns:1fr;
+  gap:12px;
+  margin-top:8px;
+}
+
+/* Card */
+.card{
+  background:var(--card);
+  border-radius:12px;
+  overflow:hidden;
+  box-shadow:var(--shadow);
+  display:flex;
+  flex-direction:column;
+}
+.card-image{
+  width:100%;
+  object-fit:cover;
+  display:block;
+  background-color:transparent;
+}
+
+/* Listing card images keep fixed height */
+.card > .card-image{
+  height:170px;
+  display:block;
+}
+
+/* Carousel images: don't crop — keep full image visible and centered */
+.carousel-stage .card-image{
+  width:100%;
+  height:100%;
+  flex:0 0 100%;
+  object-fit:contain;
+  align-self:center;
+  display:block;
+  background:var(--bg); /* safe backdrop for transparent images */
+  max-height:80vh;
+}
+.card-content{
+  padding:12px;
+}
+.card-title{
+  margin:0 0 6px 0;
+  font-size:16px;
+  color:var(--text);
+}
+.card-desc{
+  margin:0 0 12px 0;
+  color:var(--muted);
+  font-size:14px;
+  line-height:1.4;
+}
+.card-actions{
+  display:flex;
+  gap:8px;
+}
+
+/* Footer */
+.site-footer{
+  border-top:1px solid rgba(16,24,40,0.04);
+  padding:16px;
+  background:transparent;
+}
+.footer-inner{
+  max-width:var(--maxw);
+  margin:0 auto;
+  display:flex;
+  gap:12px;
+  align-items:flex-start;
+  justify-content:space-between;
+  padding:8px 16px;
+  flex-wrap:wrap;
+}
+.contact{
+  min-width:220px;
+}
+.contact-title{
+  margin:0 0 8px 0;
+  color:var(--accent);
+  font-size:16px;
+}
+.contact-item{
+  margin:6px 0;
+  color:var(--text);
+}
+.contact a{color:var(--text); text-decoration:none}
+.messengers{display:flex;gap:10px;margin-top:8px}
+.icon-link{display:inline-flex;align-items:center;justify-content:center;width:40px;height:40px;border-radius:8px;background:rgba(37,99,235,0.08);}
+
+.map-box{
+  background:#eef2ff;
+  padding:10px;
+  border-radius:10px;
+  min-width:160px;
+  color:var(--text);
+}
+
+/* Dark-theme specific visual tweaks: apply deep navy background to map label and phone links */
+:root[data-theme="dark"] .map-box{
+  background: var(--mapbox-dark-bg, #000621);
+  color: var(--text);
+}
+
+/* Ensure tel: links (used for "Позвонить") get the requested dark bg when they use .btn-outline or .btn */
+:root[data-theme="dark"] a[href^="tel"] .btn, 
+:root[data-theme="dark"] a[href^="tel"].btn, 
+:root[data-theme="dark"] a[href*="tel:"] .btn, 
+:root[data-theme="dark"] a[href*="tel:"].btn{
+  background: var(--tel-btn-dark-bg, #000621);
+  color: #ffffff;
+  border-color: rgba(255,255,255,0.06);
+  box-shadow: none;
+}
+
+/* Footer note */
+.footer-note{
+  max-width:var(--maxw);
+  margin:8px auto 0;
+  padding:8px 16px;
+  color:var(--muted);
+  font-size:13px;
+  text-align:center;
+}
+
+/* Simple gallery / carousel */
+.gallery{
+  display:flex;
+  gap:12px;
+  flex-direction:column;
+}
+.gallery-main{
+  position:relative;
+  overflow:hidden;
+  border-radius:12px;
+}
+.carousel-stage{
+  width:100%;
+  display:flex;
+  transition:transform .36s ease;
+  will-change:transform;
+  line-height:0; /* remove baseline gap under images */
+  background:var(--bg);
+}
+/* main slide images: show whole photo without cropping */
+.carousel-stage .card-image{
+  width:100%;
+  height:100%;
+  flex:0 0 100%;
+  object-fit:contain;
+  align-self:center;
+  display:block;
+  background:var(--bg); /* avoid transparent PNG showing a white stripe */
+  max-height:80vh;
+}
+.gallery-thumbs{
+  display:none !important;
+}
+.gallery-thumbs.hidden-half{
+  /* hide lower half visually on initial view to avoid long column */
+  max-height: 120px; /* compact height for mobile / narrow view */
+  overflow: hidden;
+  position: relative;
+}
+.gallery-thumbs.hidden-half::after{
+  /* subtle gradient to indicate hidden items */
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 36px;
+  pointer-events: none;
+  background: linear-gradient(180deg, rgba(248,250,252,0) 0%, rgba(248,250,252,1) 100%);
+}
+.gallery-thumbs .thumb{
+  width:72px;
+  height:52px;
+  border-radius:8px;
+  overflow:hidden;
+  cursor:pointer;
+  border:2px solid transparent;
+  flex:0 0 auto;
+}
+.gallery-thumbs .thumb img{width:100%;height:100%;object-fit:cover;display:block}
+.gallery-thumbs .thumb.active{border-color:rgba(37,99,235,0.14); box-shadow:0 6px 18px rgba(37,99,235,0.08)}
+
+/* arrows */
+.carousel-arrow{
+  position:absolute;
+  top:50%;
+  transform:translateY(-50%);
+  width:44px;
+  height:44px;
+  border-radius:12px;
+  background:rgba(255,255,255,0.60);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  box-shadow:0 10px 26px rgba(16,24,40,0.08);
+  cursor:pointer;
+  border:1px solid rgba(255,255,255,0.08);
+}
+.carousel-arrow.left{left:12px}
+.carousel-arrow.right{right:12px}
+
+/* Price: make listing price more visible */
+.price{
+  display:inline-block;
+  background:linear-gradient(90deg, rgba(37,99,235,0.10), rgba(59,130,246,0.06));
+  color:var(--accent-2);
+  font-weight:800;
+  font-size:20px;
+  padding:8px 12px;
+  border-radius:10px;
+  border:1px solid rgba(37,99,235,0.12);
+  box-shadow:0 6px 18px rgba(37,99,235,0.06);
+  margin:6px 0 12px 0;
+}
+
+/* contact-block messaengers */
+.contact-block .messengers{display:flex;gap:8px;margin-top:8px}
+.contact-block .messengers a{
+  display:inline-flex;align-items:center;gap:8px;padding:8px 10px;border-radius:10px;background:rgba(37,99,235,0.06);
+  color:var(--accent-2);text-decoration:none;font-weight:600;font-size:14px;
+}
+
+/* Responsive */
+@media(min-width:720px){
+  .cards{grid-template-columns:repeat(3,1fr)}
+  .card > .card-image{height:140px}
+  .header-inner{padding:12px 0}
+  .main-nav{display:flex}
+
+  /* Layout on wider screens: keep main image above and thumbnails below,
+     so thumbnails no longer sit to the right and follow the main content flow. */
+  .gallery{
+    flex-direction:column;
+    align-items:stretch;
+    position:relative;
+  }
+  .gallery-main{
+    width:100%;
+    padding-right:0;
+  }
+
+  .card-row{flex:1;display:flex;flex-direction:column;gap:8px}
+
+  .carousel-stage .card-image{ height:auto; } /* keep images natural height on wide screens */
+
+  /* Thumbnails flow below the main stage, arranged in rows and scroll horizontally if needed */
+  .gallery-thumbs{
+    display:none !important;
+  }
+  .gallery-thumbs .thumb{
+    width:72px;
+    height:52px;
+  }
+}
+
+/* Lightbox styles */
+.lightbox{
+  position:fixed;
+  inset:0;
+  display:none;
+  align-items:center;
+  justify-content:center;
+  z-index:1200;
+  --bg-box: rgba(2,6,23,0.6);
+}
+.lightbox.open{display:flex}
+.lightbox-backdrop{
+  position:absolute;inset:0;background:var(--bg-box);backdrop-filter:blur(6px);
+}
+.lightbox-inner{
+  position:relative;
+  max-width:96%;
+  max-height:96%;
+  width:1300px; /* allow larger display */
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  margin:auto;
+  padding:10px;
+}
+.lbx-image{
+  max-width:1280px;
+  max-height:92vh;
+  border-radius:12px;
+  box-shadow:0 20px 60px rgba(2,6,23,0.55);
+  object-fit:contain;
+  display:block;
+  background:transparent;
+}
+.lbx-nav{
+  position:absolute;
+  top:50%;
+  transform:translateY(-50%);
+  width:52px;
+  height:52px;
+  border-radius:12px;
+  background:rgba(255,255,255,0.60);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border:1px solid rgba(255,255,255,0.10);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  cursor:pointer;
+  box-shadow:0 12px 30px rgba(2,6,23,0.25);
+}
+.lbx-nav.left{left:8px}
+.lbx-nav.right{right:8px}
+.lbx-close{
+  position:absolute;right:8px;top:8px;border:none;background:rgba(255,255,255,0.9);width:40px;height:40px;border-radius:10px;font-size:20px;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;box-shadow:0 8px 20px rgba(2,6,23,0.18);
+}
+.lbx-counter{
+  position:absolute;left:50%;transform:translateX(-50%);bottom:10px;background:rgba(0,0,0,0.5);color:white;padding:6px 10px;border-radius:999px;font-size:13px;
+}
+
+/* Ensure no baseline gaps or white stripes for PNGs */
+img{display:block;line-height:0;max-width:100%;}
