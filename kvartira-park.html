@@ -100,5 +100,97 @@
   </footer>
 
   <script src="script.js"></script>
+  <script>
+    (function() {
+      const galleryKey = 'park';
+
+      function loadDataFromStorage() {
+        try {
+          const raw = localStorage.getItem('gallery_' + galleryKey);
+          if (!raw) return null;
+          const parsed = JSON.parse(raw);
+          if (parsed && typeof parsed === 'object' && Array.isArray(parsed.images)) {
+            return parsed;
+          }
+        } catch (e) {
+          console.warn('Не удалось загрузить данные из хранилища', e);
+        }
+        return null;
+      }
+
+      function applyDataToPage(data) {
+        if (!data) return;
+
+        const gallerySection = document.querySelector('[data-gallery][data-gallery-key="' + galleryKey + '"]');
+        if (gallerySection) {
+          const stage = gallerySection.querySelector('[data-stage]');
+          if (stage && data.images && data.images.length > 0) {
+            stage.innerHTML = '';
+            data.images.forEach(imgData => {
+              const img = document.createElement('img');
+              img.className = 'card-image';
+              img.src = imgData.src || '';
+              img.alt = imgData.alt || '';
+              stage.appendChild(img);
+            });
+          }
+        }
+
+        const meta = data.meta || {};
+        
+        if (meta.title) {
+          document.title = meta.title + ' — HAREST';
+          const ownerSub = document.querySelector('.owner-sub');
+          if (ownerSub) ownerSub.textContent = meta.title;
+        }
+
+        const priceElement = document.querySelector('.price');
+        if (priceElement && meta.price) {
+          priceElement.innerHTML = meta.price;
+        }
+
+        const descElement = document.querySelector('.desc');
+        if (descElement && meta.description) {
+          const strong = descElement.querySelector('strong');
+          if (strong) {
+            strong.nextSibling ? strong.nextSibling.textContent = ' ' + meta.description : descElement.innerHTML = '<strong>Описание:</strong> ' + meta.description;
+          } else {
+            descElement.innerHTML = '<strong>Описание:</strong> ' + meta.description;
+          }
+        }
+
+        const specsContainer = document.querySelector('.specs');
+        if (specsContainer && meta.specs && Array.isArray(meta.specs)) {
+          specsContainer.innerHTML = '';
+          meta.specs.forEach(specText => {
+            if (specText.trim()) {
+              const specDiv = document.createElement('div');
+              specDiv.className = 'spec';
+              specDiv.textContent = specText;
+              specsContainer.appendChild(specDiv);
+            }
+          });
+        }
+      }
+
+      document.addEventListener('DOMContentLoaded', function() {
+        const storedData = loadDataFromStorage();
+        applyDataToPage(storedData);
+      });
+
+      window.addEventListener('storage', function(e) {
+        if (e.key === ('gallery_' + galleryKey)) {
+          if (e.newValue) {
+            try {
+              const newData = JSON.parse(e.newValue);
+              applyDataToPage(newData);
+            } catch (ex) {
+              console.warn('Ошибка при обновлении данных', ex);
+            }
+          }
+        }
+      });
+    })();
+  </script>
 </body>
 </html>
