@@ -1,7 +1,0 @@
-/* styles.css — lightweight wrapper that imports the canonical stylesheet.
-   The large monolithic stylesheet was moved to styles/main.css for better maintainability.
-   Tombstone: removed big in-file stylesheet; keep this wrapper so HTML pages need not change.
-   removed CSS blob previously here: // removed large stylesheet content
-*/
-
-@import url('styles/main.css');
